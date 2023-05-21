@@ -1,0 +1,49 @@
+{
+    "orders": [
+        {
+            "orderNumber": "1231313",
+            "statusTitle": "Заказ подтвержден",
+            "status": "1",
+            "addressDelivery": "Казахстан, г. Кызылорда, Абая 21",
+            "typeDelivery": "1",
+            "date": "21.12.2021",
+            "trackerNumber": "NHJ78652365"
+        },
+        {
+            "orderNumber": "1231313",
+            "statusTitle": "Заказ доставлен",
+            "status": "2",
+            "addressDelivery": "Казахстан, г. Алматы, Назарбаева 7",
+            "typeDelivery": "1",
+            "date": "21.12.2021",
+            "trackerNumber": "NHJ78652365"
+        },
+        {
+            "orderNumber": "1231313",
+            "statusTitle": "Ожидает оплату",
+            "status": "3",
+            "addressDelivery": "Казахстан, г. Алматы, Назарбаева 7",
+            "typeDelivery": "2",
+            "date": "21.12.2021",
+            "trackerNumber": "NHJ78652365"
+        },
+        {
+            "orderNumber": "1231313",
+            "statusTitle": "Заказ отменен",
+            "status": "4",
+            "addressDelivery": "Казахстан, г. Алматы, Назарбаева 7",
+            "typeDelivery": "1",
+            "date": "21.12.2021",
+            "trackerNumber": "NHJ78652365"
+        },
+        {
+            "orderNumber": "1231313",
+            "statusTitle": "Заказ подтвержден",
+            "status": "1",
+            "addressDelivery": "Казахстан, г. Алматы, Аксай",
+            "typeDelivery": "1",
+            "date": "21.12.2021",
+            "trackerNumber": "NHJ78652365"
+        }
+    ]
+}
