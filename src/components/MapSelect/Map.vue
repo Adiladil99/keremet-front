@@ -68,10 +68,14 @@ export default {
   mounted() {
     this.geocoder = new google.maps.Geocoder();
     this.directionsService = new google.maps.DirectionsService();
-    navigator.geolocation.getCurrentPosition((position) => {
+    setInterval(() => {
+      navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       this.userLocation = { lat: latitude, lng: longitude };
+      console.log('this.userLocation', this.userLocation);
     });
+    }, 5000);
+    
   },
   methods: {
     selectObject(event) {
@@ -129,7 +133,7 @@ export default {
           const route = result.routes[0];
           const distance = route.legs[0].distance.text;
           this.distance = distance;
-
+          this.$emit("distance", this.distance)
           const path = route.overview_path.map((point) => ({
             lat: point.lat(),
             lng: point.lng(),

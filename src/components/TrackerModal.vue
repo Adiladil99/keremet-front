@@ -2,13 +2,14 @@
     <div class="trackerBack animated fadeIn" @click="$store.state.openTrackerModal = false">
         <div class="tracker animated fadeInLogin" v-scroll @click.stop>
             <img  class="tracker-close" src="@/assets/icons/close.png"  @click="$store.state.openTrackerModal = false"/>
-            <p class="tracker-p1">{{ $t('numberOrder') }}:NHJ78652365</p>
+            <p class="tracker-p1">{{ $t('history6') }}:{{order.orderId.track_number}}</p>
+            <p class="tracker-p1">{{ $t('price') }}: {{order.price}} ₸</p>
             <p class="tracker-line"></p>
             <p class="tracker-p2">{{ $t('status') }}</p>
             <div class="tracker__gps">
                 <div class="tracker__gps-line"></div>
                 <div class="tracker__gps__content">
-                    <div class="tracker__gps__content__box" :class="{acitveTracker: true}">
+                    <div class="tracker__gps__content__box">
                         <div class="tracker__gps__content__box-square"></div>
                         <p class="tracker__gps__content__box-p1">Заказ подтвержден</p>
                         <p class="tracker__gps__content__box-p2">13:00</p>
@@ -17,7 +18,7 @@
                         <div class="tracker__gps__content__box-square"></div>
                         <p class="tracker__gps__content__box-p1">Заказ отправлен</p>
                     </div>
-                    <div class="tracker__gps__content__box">
+                    <div class="tracker__gps__content__box" :class="{acitveTracker: true}">
                         <div class="tracker__gps__content__box-square"></div>
                         <p class="tracker__gps__content__box-p1">В пункте распределения</p>
                     </div>
@@ -29,22 +30,44 @@
             </div>
             <p class="tracker-line"></p>
             <p class="tracker-p3">{{ $t('dataDeliveryPrim') }}: 31:12:2021</p>
-            <div class="tracker-map">
+            <button class="slej" @click="openMap = true">Отслеживание на карте</button>
+            <!-- <div class="tracker-map">
                 <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A64bb9d9607c45f4521508b4352a0f4b060e31a120d53e62111d4e692b04dd2be&amp;source=constructor" width="500" height="400" frameborder="0"></iframe>
-            </div>
+            </div> -->
             <button class="tracker-button">{{ $t('closeOrder') }}</button>
         </div>
     </div>
+    <ModalComponent :isOpen="openMap" @click="openMap = false">
+        <div class="openmap">
+            <h3>Отслеживание на карте</h3>
+            <MapDetail :coord="JSON.parse(order.orderId.map_data)" />
+        </div>
+    </ModalComponent>
 </template>
 <script>
+import MapDetail from '@/components/MapSelect/MapDetail.vue'
+import ModalComponent from './ModalComponent.vue';
+
 export default {
-    
+    props: ["order"],
+    components: { ModalComponent, MapDetail },
+    data: () => ({
+        openMap: false
+    })
 }
 </script>
 <style lang="scss" scoped>
 .animated {
   animation-duration: 1s;
   animation-fill-mode: both;
+}
+
+.openmap {
+    padding: 20px 30px;
+    background: white;
+    border-radius: 20px;
+    height: 80vh;
+    width: 80vw;
 }
 .fadeIn {
   animation-name: fadeIn;
@@ -71,7 +94,18 @@ export default {
   }
 }
 
-
+.slej {
+    margin: 0 auto;
+    width: 100%;
+        border: 1px solid #cb0e16;
+        background: white;
+        color: #252525;
+    &:hover {
+        cursor: pointer;
+    color: white;
+    background: #cb0e16;
+    }
+}
 .acitveTracker {
     .tracker__gps__content__box-square {
         border: 6px solid #f6f6f6bb !important;

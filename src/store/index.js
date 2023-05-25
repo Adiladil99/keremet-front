@@ -48,17 +48,16 @@ export default createStore({
               Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
       })
-          .then(response => {
-              commit("SET_USER", response.data.user);
-              commit("SET_AUTH", true);
-          })
-
-          .catch(error => {
-              commit("SET_USER", {});
-              commit("SET_AUTH", false);
-              localStorage.removeItem("access_token");
-              // dispatch.checkAuth()
-          })
+      .then(response => {
+        commit("SET_USER", response.data.user);
+        commit("SET_AUTH", true);
+      })
+      .catch(error => {
+        commit("SET_USER", {});
+        commit("SET_AUTH", false);
+        localStorage.removeItem("access_token");
+        // dispatch.checkAuth()
+      })
     },    
     logoutUser({ commit }) {
       localStorage.removeItem("access_token");

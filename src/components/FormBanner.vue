@@ -7,41 +7,42 @@
         <div class="formBanner__after">
             <div class="formBanner__after-city">
                 <img src="@/assets/icons/gps.svg"/>
-                <p>Выберите место отправки</p>
-                <div class="formBanner__after-city-gps" @click="$store.state.openGpsModal = true">
+                <input v-model="city1" type="text" placeholder="Введите название города отправки" />
+                <!-- <div class="formBanner__after-city-gps" @click="$store.state.openGpsModal = true">
                     <img src="@/assets/icons/gpsMapper.png"/>
-                </div>
+                </div> -->
             </div>
             <div class="formBanner__after-line"></div>
             <div class="formBanner__after-cities">
-                <p>Алматы</p>
-                <p>Нур-Султан(Астана)</p>
-                <p>Шымкент</p>
+                <template v-for="item in cities" :key="item">
+                    <p style="cursor: pointer;" @click="city1 = item" v-if="item !== city1 && item !== city2">{{item}}</p>
+                </template>
             </div>
         </div>
         <div class="formBanner__after">
             <div class="formBanner__after-city">
                 <img src="@/assets/icons/gpsFrom.svg"/>
-                <p>Выберите место получения</p>
-                <div class="formBanner__after-city-gps">
+                <input v-model="city2" type="text" placeholder="Введите название города доставки" />
+                <!-- <div class="formBanner__after-city-gps">
                     <img src="@/assets/icons/gpsMapper.png"/>
-                </div>
+                </div> -->
             </div>
             <div class="formBanner__after-line"></div>
             <div class="formBanner__after-cities">
-                <p>Алматы</p>
-                <p>Нур-Султан(Астана)</p>
-                <p>Шымкент</p>
+                <template v-for="item in cities" :key="item">
+                    <p style="cursor: pointer;" @click="city2 = item" v-if="item !== city1 && item !== city2">{{item}}</p>
+                </template>
             </div>
         </div>
 
         <div class="formBanner__after">
             <div class="formBanner__after-city">
                 <img src="@/assets/icons/weight.svg"/>
-                <p>2 <span style="opacity: 0.6; font-size: 14px;">({{ $t('weight') }})</span></p>
+                <input min="1" type="number" style="max-width: 150px;" v-model="weight" placeholder="Введите вес груза" /> 
+                <span style="opacity: 0.6; font-size: 14px;">({{ $t('weight') }})</span>
             </div>
             <div class="formBanner__after-line"></div>
-            <div class="formBanner__after__parametrs" v-if="valueForm == 2">
+            <!-- <div class="formBanner__after__parametrs" v-if="valueForm == 2">
                 <div style="display: flex; gap: 17px;">
                     <img src="@/assets/icons/height.svg"/>
                     <p>Высота <span style="opacity: 0.6; font-size: 14px;">(см)</span></p>
@@ -50,19 +51,19 @@
                 <p>Длина <span style="opacity: 0.6; font-size: 14px;">(см)</span></p>
                 <div class="formBanner__after__parametrs-line"></div>
                 <p>Ширина <span style="opacity: 0.6; font-size: 14px;">(см)</span></p>
-            </div>
-            <div class="formBanner__after-line" v-if="valueForm == 2"></div>
+            </div> -->
+            <!-- <div class="formBanner__after-line" v-if="valueForm == 2"></div> -->
         </div>
 
         <div class="formBanner__date">
             <div class="formBanner__date__between">
                 <p class="formBanner__date__between-p1">{{ $t('priceDelivery') }}</p>
-                <p class="formBanner__date__between-p2">2500 Тенге</p>
+                <p class="formBanner__date__between-p2">Чтобы узнать сумму доставки переходите на страницу детального оформление</p>
             </div>
-            <div class="formBanner__date__between">
+            <!-- <div class="formBanner__date__between">
                 <p class="formBanner__date__between-p1">{{ $t('dateDelivery') }}</p>
                 <p class="formBanner__date__between-p2">31.12.2021</p>
-            </div>
+            </div> -->
         </div>
 
         <button class="formBanner__send" @click="sendOrder">{{ $t('offirming') }}</button>
@@ -73,11 +74,16 @@ export default {
     data() {
         return {
             valueForm: 1,
+            city1: '',
+            city2: '',
+            totalPrice: null,
+            weight: null,
+            cities: ["Алматы", "Астана", "Шымкент", "Актобе", "Тараз", "Семей"]
         }
     },
     methods: {
         sendOrder() {
-           this.$router.push({ name: 'OrderView', query: { order_data: JSON.stringify({lon: 4, lang: 5}) }});
+           this.$router.push({ name: 'OrderView', query: { order_data: JSON.stringify({type: this.valueForm, weight: this.weight}) }});
         }
     },
     inject: ['address1'],
@@ -99,7 +105,7 @@ export default {
         width: 95%;
     }
     &__buttons {
-        margin-bottom: 53px;
+        margin-bottom: 33px;
         display: flex;
         gap: 16px;
         &-b1 {
@@ -195,7 +201,7 @@ export default {
             &-p2 {
                 color: #23262F;
                 font-weight: 700;
-                font-size: 24px;
+                font-size: 16px;
             }
         }
     }
