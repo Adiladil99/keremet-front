@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Header />
+    <Header v-if="$route.name !== 'AdminViewSlug' && $route.name !== 'AdminView' && $route.name !== 'DriverView'" />
     <router-view class="main"/>
-    <Footer />
+    <Footer v-if="$route.name !== 'AdminViewSlug' && $route.name !== 'AdminView' && $route.name !== 'DriverView'" />
   </div>
 </template>
 

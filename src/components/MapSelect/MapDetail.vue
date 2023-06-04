@@ -8,15 +8,22 @@
 
       <CustomMarker v-if="coord" :options="{ position: coord[0], anchorPoint: 'BOTTOM_CENTER' }">
         <div style="text-align: center">
-          <div style="font-size: 1.125rem">Адрес отправки</div>
+          <div style="font-size: 1.125rem; background: white; margin-bottom: -5px; padding: 2px 5px;">Адрес отправки</div>
           <img  class="gpsStyle" src="@/assets/icons/gpsMapper.png"/>
         </div>
       </CustomMarker>
 
       <CustomMarker v-if="coord" :options="{ position: coord[1], anchorPoint: 'BOTTOM_CENTER' }">
         <div style="text-align: center">
-          <div style="font-size: 1.125rem">Адрес доставки</div>
+          <div style="font-size: 1.125rem; background: white; margin-bottom: -5px; padding: 2px 5px;">Адрес доставки</div>
           <img  class="gpsStyle" src="@/assets/icons/gpsMapper.png"/>
+        </div>
+      </CustomMarker>
+
+      <CustomMarker v-if="false_id && getCordsDriver" :options="{ position: getCordsDriver, anchorPoint: 'BOTTOM_CENTER' }">
+        <div style="text-align: center">
+          <div style="font-size: 1.125rem; background: white; margin-bottom: -15px; padding: 2px 5px;">Товар</div>
+          <img style="width: 50px; height: 50px; object-fit: cover;" class="gpsStyle" src="@/assets/icons/679821.png"/>
         </div>
       </CustomMarker>
 
@@ -52,6 +59,7 @@ export default {
       mapZoom: 15,
       address1: '',
       address2: '',
+      getCordsDriver: false,
       markers: [],
       distBool: false,
       polylineOptions: {
@@ -62,9 +70,10 @@ export default {
       },
       distance: null,
       geocoder: null,
+      inter: false,
     };
   },
-  props: ["coord"],
+  props: ["coord", "geoloc", "driver_id", "false_id"],
   mounted() {
     this.geocoder = new google.maps.Geocoder();
     this.directionsService = new google.maps.DirectionsService();
@@ -72,7 +81,20 @@ export default {
       const { latitude, longitude } = position.coords;
       this.userLocation = { lat: latitude, lng: longitude };
     });
-      this.calculateDistance() 
+    this.calculateDistance() 
+    
+    if (this.false_id) {
+      this.inter = setInterval(() => {
+        this.$axios.post(`/auth-driver/getLoc`, {
+        id: this.driver_id
+      })
+        .then(res => {
+          this.getCordsDriver = JSON.parse(res.data.location) 
+        })
+      }, 10000);
+    } else {
+      clearInterval(this.inter)
+    }
   },
   methods: {
     calculateDistance() {

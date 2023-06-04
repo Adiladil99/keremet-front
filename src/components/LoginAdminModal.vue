@@ -1,5 +1,5 @@
 <template>
-    <div class="loginBack animated fadeIn" @click="$store.state.openLoginModal = false">
+    <div class="loginBack animated fadeIn" @click="$store.state.openLoginAdminModal = false">
         <div class="login animated fadeInLogin" v-scroll @click.stop>
             <p class="login-p1">Вход в кабинет </p>
             <p class="login-p2">
@@ -30,10 +30,10 @@
                 </template>
             </div>
             <button class="login-p3" @click="loginAccount">Войти</button>
-            <p class="login-p4">Еще не зарегистрированы? <span style="color: red; cursor: pointer;" @click="$store.state.openRegisterModal = true, $store.state.openLoginModal = false">Зарегистрироваться</span></p>
+            <p class="login-p4">Еще не зарегистрированы? <span style="color: red; cursor: pointer;" @click="$store.state.openRegisterModal = true, $store.state.openLoginAdminModal = false">Зарегистрироваться</span></p>
 
             <div class="login-close">
-                <img src="@/assets/icons/close.png" @click="$store.state.openLoginModal = false"/>
+                <img src="@/assets/icons/close.png" @click="$store.state.openLoginAdminModal = false"/>
             </div>
         </div>
     </div>
@@ -82,22 +82,22 @@ export default {
         loginAccount() {
             this.v$.$validate();
             if (!this.v$.$invalid) {
-                this.$axios.post("auth/login", {
+                this.$axios.post("auth-driver/login", {
                     email: this.email,
                     password: this.password
                 })
                 .then(res => {
                     localStorage.setItem("access_token", res.data.accessToken)
-                    localStorage.setItem("typee", 'user')
+                    localStorage.setItem("typee", 'driver')
                     this.$toaster.success('Вы успешно авторизовались');
-                    this.$store.state.openLoginModal = false,
-                    this.$store.state.user_type = 'user',
+                    this.$store.state.openLoginAdminModal = false,
+                    this.$store.state.user_type = 'driver',
                     this.requestUser()
-                    this.$router.push('/profile/data')
+                    this.$router.push('/admin/data')
                     this.reserForm()
                 })
                 .catch(err => {
-                    this.$toaster.warning('Произошло ошибка! Повторите попытку позже!');
+                    this.$toaster.success('Произошло ошибка! Повторите попытку позже!');
                     this.logoutUser()
                 })
             }

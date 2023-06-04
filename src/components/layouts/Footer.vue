@@ -20,15 +20,23 @@
                         <router-link to="#faq"><p>{{ $t('faq') }}</p></router-link>
                         <p>|</p>
                         <router-link to="#contacts"><p>{{ $t('contacts') }}</p></router-link>
+                        <p v-if="getType !== 'user'">|</p>
+                        <div v-if="getType !== 'user'" @click="$router.push('/driver')" style="cursor: pointer;"><p>{{ $t('driverr') }}</p></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <LoginAdminModal  v-if="$store.state.openLoginAdminModal == true" />
 </template>
 <script>
+import { mapGetters } from 'vuex'
+import LoginAdminModal from '../LoginAdminModal.vue'
 export default {
-    
+  components: { LoginAdminModal },
+computed: {
+    ...mapGetters(["getType"])
+}
 }
 </script>
 <style lang="scss" scoped>

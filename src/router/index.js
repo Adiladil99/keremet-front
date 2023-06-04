@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import OrderView from '@/views/OrderView.vue'
 import PaymentView from '@/views/PaymentView.vue'
+import AdminView from '@/views/AdminView.vue'
 import ProfileView from '@/views/ProfileView.vue'
+import DriverView from '@/views/DriverView.vue'
 import TrackerView from '@/views/TrackerView.vue'
 
 const routes = [
@@ -32,9 +34,24 @@ const routes = [
     component: ProfileView
   },
   {
+    path: '/driver',
+    name: 'DriverView',
+    component: DriverView
+  },
+  {
     path: '/profile/:slug',
     name: 'ProfileViewSlug',
     component: ProfileView
+  },
+  {
+    path: '/admin',
+    name: 'AdminView',
+    component: AdminView
+  },
+  {
+    path: '/admin/:slug',
+    name: 'AdminViewSlug',
+    component: AdminView
   }
 ]
 

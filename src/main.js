@@ -8,15 +8,15 @@ import i18n from "./i18n";
 import vClickOutside from "click-outside-vue3"
 import axios from "axios";
 
-// axios.defaults.baseURL="http://localhost:3002/api/";
-axios.defaults.baseURL="https://admin-keremet.devup.kz/api/";
+axios.defaults.baseURL="http://localhost:3002/api/";
+// axios.defaults.baseURL="https://admin-keremet.devup.kz/api/";
 axios.defaults.params={
  lang: store.getters.getLang
 };
 
 const axiosInstance = axios.create({
     // baseURL: 'http://localhost:3002/api/',
-    baseURL: 'https://admin-keremet.devup.kz/api/',
+    baseURL: 'https://admin-keremet.devup.kz/api/',     
     params: {
      lang: store.getters.getLang
     }

@@ -1,14 +1,15 @@
 <template>
-  <TrackerModal v-if="$store.state.openTrackerModal == true && currentOrder" :order="currentOrder" :sms="sms"  :driver="false" />
+  <div class="fixx">
+  <TrackerModal v-if="$store.state.openTrackerModal == true && currentOrder" :order="currentOrder" :sms="false" :driver="true" />
   <div class="profile container">
     <div class="profile__left">
-      <div class="profile__left__box" @click="$router.push('/profile/data')">
+      <div class="profile__left__box" @click="$router.push('/admin/data')">
         <img src="@/assets/icons/profileIcon.svg" />
         <p>{{ $t("profile") }}</p>
       </div>
-      <div class="profile__left__box" @click="$router.push('/profile/tracker')">
+      <div class="profile__left__box" @click="$router.push('/admin/tracker')">
         <img src="@/assets/icons/history.svg" />
-        <p>{{ $t("historyNotice") }}</p>
+        <p>{{ $t("leaveRess") }}</p>
       </div>
       <div class="profile__left__box" @click="leaveAccount">
         <img src="@/assets/icons/leave.svg" />
@@ -16,15 +17,15 @@
       </div>
     </div>
     <div class="profile__right">
-      <div class="date" v-if="$route.path == '/profile/data'">
+      <div class="date" v-if="$route.path == '/admin/data'">
         <p class="date-title">{{ $t("profileInfo") }}</p>
-        <div class="date__inputs">
+        <div class="date__inputs" v-if="getUser">
           <div class="date__inputs__box">
             <p class="date__inputs__box-title">{{ $t("fio") }}</p>
             <input
               type="text"
-              :placeholder="account.fio"
-              v-model="account.fio"
+              :placeholder="getUser.fio"
+              v-model="getUser.fio"
             />
           </div>
           <div class="date__inputs__box">
@@ -32,16 +33,16 @@
             <input
               type="email"
               disabled
-              :placeholder="account.email"
-              v-model="account.email"
+              :placeholder="getUser.email"
+              v-model="getUser.email"
             />
           </div>
           <div class="date__inputs__box">
             <p class="date__inputs__box-title">{{ $t("phone") }}</p>
             <input
               type="text"
-              :placeholder="account.phone"
-              v-model="account.phone"
+              :placeholder="getUser.phone"
+              v-model="getUser.phone"
             />
           </div>
           <div class="date__inputs__box">
@@ -49,35 +50,18 @@
             <input
               type="password"
               placeholder="*********"
-              v-model="account.password"
             />
           </div>
         </div>
         <div class="date-line"></div>
-        <!-- <button class="date-button">{{ $t("updateData") }}</button> -->
       </div>
 
-      <div class="history" v-if="$route.path == '/profile/tracker'">
-        <p class="date-title">{{ $t("historyNotice") }}</p>
+      <div class="history" v-if="$route.path == '/admin/tracker'">
+        <p class="date-title">{{ $t("leaveRess") }}</p>
         <div class="history__top">            
             <div class="history-search">
-                <!-- <input :placeholder="$t('trackCode')" />
-                <img src="@/assets/icons/search.svg" /> -->
                 <button @click="reload">Обновить данные</button>
             </div>
-            <!-- <div class="mobile">
-              <div class="history__top-filters">
-                <select v-model="status">
-                    <option value="">По статусам заказа</option>
-                    <option v-for="item in slist" :key="item" :value="item">{{ item }}</option>
-                </select>
-                <select v-model="payment_status">
-                    <option value="">По статусам оплаты</option>
-                    <option v-for="item in plist" :key="item" :value="item">{{ item }}</option>
-                </select>
-            </div>
-            </div> -->
-
         </div>
         <!-- <div class="history__filters">
           <button>Новые (3)</button>
@@ -101,16 +85,6 @@
             </th>
             <th class="table__tr__th">
               <p>{{ $t("history2") }}</p>
-              <!-- <div class="table__tr__th__select">
-                <img
-                  src="@/assets/icons/selectLittle.svg"
-                  style="rotate: 180deg"
-                />
-                <img src="@/assets/icons/selectLittle.svg" />
-              </div> -->
-            </th>
-            <th class="table__tr__th">
-              <p>{{ $t("history22") }}</p>
               <!-- <div class="table__tr__th__select">
                 <img
                   src="@/assets/icons/selectLittle.svg"
@@ -159,8 +133,18 @@
                 <img src="@/assets/icons/selectLittle.svg" />
               </div> -->
             </th>
+            <th class="table__tr__th">
+              <p @click="checkOrder">Действие</p>
+              <!-- <div class="table__tr__th__select">
+                <img
+                  src="@/assets/icons/selectLittle.svg"
+                  style="rotate: 180deg"
+                />
+                <img src="@/assets/icons/selectLittle.svg" />
+              </div> -->
+            </th>
           </tr>
-          <tr class="table__content" v-for="item in filterOrders" :key="item">
+          <tr class="table__content" v-for="(item, index) in filterOrders" :key="item">
             <td>{{ item.id }}</td>
 
             <td class="table__content__status">
@@ -172,7 +156,6 @@
               </div>
               <p>{{ item.status}}</p>
             </td>
-            <td>{{ item.payment_status}}</td>
 
             <td>{{ item.orderId.sender_city + ', ' + item.orderId.sender_address}}</td>
 
@@ -181,16 +164,23 @@
             <td>{{ item.createdAt.slice(0, 10) }}</td>
 
             <td
-              @click="sms = item.orderId.code_sms ,currentOrder = item,$store.state.openTrackerModal = true"
+              @click="currentOrder = item,$store.state.openTrackerModal = true"
               style="cursor: pointer"
             >
               {{ item.orderId.track_number }}
+            </td>
+            <td style="display: flex;
+            flex-direction: column; align-items: stretch; gap: 5px;">
+              <button class="sacsa" @click="sendGeo(item.id)" style="padding: 10px 20px; width: 80%;" v-if="item.status === 'Заказ подтвержден'">Принять</button>
+              <input class="sacs1a" type="text" v-model="codesms[index]" placeholder="Введите код" v-if="item.status === 'Заказ передан водителю'" />
+              <button class="sacsa" @click="sendCheck(item.id, item.orderId.code_sms, index)" style="padding: 10px 20px; width: 80%;" v-if="item.status === 'Заказ передан водителю'">Выполнить</button>
             </td>
           </tr>
         </table>
       </div>
     </div>
   </div>
+</div>
 </template>
 <script>
 import AOS from "aos";
@@ -204,8 +194,11 @@ export default {
     return {
         orders: orders.orders,
       currentOrder: false,
-      sms: false,
-      account: {},
+      isGeo: false,
+      userLocation: false,
+      account: false,
+      intervalId: false,
+      codesms: [],
         getOrders: false,
         payment_status: '',
         status: '',
@@ -228,14 +221,8 @@ export default {
         }
     }
   },
-  watch: {
-    getUser() {
-      this.account = this.getUser;
-      this.account.password = "";
-    },
-  },
   methods: {
-    ...mapActions(["logoutUser"]),
+    ...mapActions(["logoutUser", "requestUser"]),
     leaveAccount() {
       this.logoutUser();
       this.$toaster.error("Вы вышли с аккаунта.");
@@ -243,6 +230,59 @@ export default {
     },
     reload() {
       location.reload()
+    },
+    sendCheck(idd, sms, index) {
+      if(sms === this.codesms[index]) {
+        this.$axios
+          .post("auth-driver/updateOrder", {
+            id: idd,
+            status: 'Исполнено'
+          })
+          .then((res) => {
+            this.isGeo = true;
+            this.requestUser()
+            this.$toaster.success('Заказ успешно передан')
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        this.$toaster.warning('Неправильный код')
+      }
+        
+    },
+    async sendGeo(value) {
+      this.$axios
+        .post("auth-driver/updateOrder", {
+          id: value,
+          status: 'Заказ передан водителю'
+        })
+        .then((res) => {
+          this.isGeo = true;
+          this.requestUser()
+        })
+        .catch((err) => {
+          console.log(err);
+        }); 
+    },
+    updateLocation() {      
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        this.userLocation = { lat: latitude, lng: longitude };
+      });
+      this.intervalId = setInterval(() => {
+        this.$axios
+          .post("auth-driver/updateloc", {
+            geoloc: JSON.stringify(this.userLocation),
+            user_id: this.getUser.id
+          })
+          .then((res) => {
+            this.isGeo = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }, 10000)
     },
     getClassForStatus(status) {
         switch (status) {
@@ -261,25 +301,47 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     AOS.init();
-    this.$axios
-      .get("orders", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      })
-      .then((res) => {
-        this.getOrders = res.data.data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   },
   components: { TrackerModal },
+  watch: {
+    async getUser() {
+      if (this.getUser !== {}) {
+        await this.$axios
+        .post("orders/drivers", {
+          drid: this.getUser.id
+        })
+        .then((res) => {
+          this.getOrders = res.data.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+        this.getOrders.forEach(item => {
+          this.codesms.push("")
+        })
+        
+        if (this.getOrders.some(res => res.status === 'Заказ передан водителю')) {
+          this.updateLocation()
+        } else {
+          clearInterval(this.intervalId)
+        }
+        console.log('getUser');
+      }
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
+.fixx {  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+}
 .table {
   margin-top: 48px;
   width: 100%;
@@ -481,6 +543,7 @@ export default {
   }
 }
 .profile {
+  background: white;
   margin-top: 32px;
   margin-bottom: 270px;
   margin-right: auto;
@@ -568,5 +631,15 @@ export default {
     }
   }
 }
-
+.sacsa {
+  &:hover {
+    cursor: pointer;
+    background: green;
+    color: white;
+  }
+}
+.sacs1a {
+  width: 60% !important;
+  height: 30px !important;
+}
 </style>

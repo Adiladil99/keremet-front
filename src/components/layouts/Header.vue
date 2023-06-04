@@ -31,8 +31,12 @@
 
                 <div class="header__bot__right">
                     <button class="header__bot__right-button1" @click="$router.push('/order')">{{ $t('offerForm') }}</button>
-                    <img v-if="!getAuth" src="@/assets/icons/profile.svg" @click="$store.state.openLoginModal = true" style="cursor: pointer;"/>
-                    <button v-else class="header__bot__right-button2" @click="$router.push('/profile/data')" style="cursor: pointer;">
+                    <img v-if="getType === false" src="@/assets/icons/profile.svg" @click="$store.state.openLoginModal = true" style="cursor: pointer;"/>
+                    <button v-else-if="getType === 'driver'" class="header__bot__right-button2" @click="$router.push('/admin/data')" style="cursor: pointer;">
+                        {{ getUser.fio }}
+                        <img src="@/assets/icons/profileActive.svg"/>
+                    </button>
+                    <button v-else-if="getType === 'user'" class="header__bot__right-button2" @click="$router.push('/profile/data')" style="cursor: pointer;">
                         {{ getUser.fio }}
                         <img src="@/assets/icons/profileActive.svg"/>
                     </button>
@@ -107,7 +111,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getLang',"getAuth", "getUser"])
+        ...mapGetters(['getLang',"getAuth", "getUser", "getType"])
     },
     created() {
         this.requestUser()
