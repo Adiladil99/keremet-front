@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import OrderView from '@/views/OrderView.vue'
+import MovingView from '@/views/MovingView.vue'
 import PaymentView from '@/views/PaymentView.vue'
 import AdminView from '@/views/AdminView.vue'
 import ProfileView from '@/views/ProfileView.vue'
@@ -17,6 +18,11 @@ const routes = [
     path: '/order',
     name: 'OrderView',
     component: OrderView
+  },
+  {
+    path: '/moving',
+    name: 'MovingView',
+    component: MovingView
   },
   {
     path: '/payment',

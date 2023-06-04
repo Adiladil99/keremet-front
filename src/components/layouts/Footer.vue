@@ -11,15 +11,15 @@
             </div>
             <div  class="footer__bot">
                 <p class="footer__bot__left">Copyright <span style="font-weight: 500; color: white">© {{ $t('privacyAll') }}</span></p>
-                <div class="desctop">
+                <div class="">
                     <div class="footer__bot__right">
-                        <router-link to="#about"><p>{{ $t('aboutUs') }}</p></router-link>
-                        <p>|</p>
-                        <router-link to="#reviews"><p>{{ $t('reviews') }}</p></router-link>
-                        <p>|</p>
-                        <router-link to="#faq"><p>{{ $t('faq') }}</p></router-link>
-                        <p>|</p>
-                        <router-link to="#contacts"><p>{{ $t('contacts') }}</p></router-link>
+                        <router-link class="desctop" to="#about"><p>{{ $t('aboutUs') }}</p></router-link>
+                        <p class="desctop">|</p>
+                        <router-link class="desctop" to="#reviews"><p>{{ $t('reviews') }}</p></router-link>
+                        <p class="desctop">|</p>
+                        <router-link class="desctop" to="#faq"><p>{{ $t('faq') }}</p></router-link>
+                        <p class="desctop">|</p>
+                        <router-link class="desctop" to="#contacts"><p>{{ $t('contacts') }}</p></router-link>
                         <p v-if="getType !== 'user'">|</p>
                         <div v-if="getType !== 'user'" @click="$router.push('/driver')" style="cursor: pointer;"><p>{{ $t('driverr') }}</p></div>
                     </div>

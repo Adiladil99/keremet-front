@@ -30,6 +30,7 @@
                 </div>
 
                 <div class="header__bot__right">
+                    <button class="header__bot__right-button1" @click="$router.push('/moving')">Мувинговая услуга</button>
                     <button class="header__bot__right-button1" @click="$router.push('/order')">{{ $t('offerForm') }}</button>
                     <img v-if="getType === false" src="@/assets/icons/profile.svg" @click="$store.state.openLoginModal = true" style="cursor: pointer;"/>
                     <button v-else-if="getType === 'driver'" class="header__bot__right-button2" @click="$router.push('/admin/data')" style="cursor: pointer;">
@@ -70,8 +71,15 @@
             <div class="headerMobileMenu__content container">
                 <div class="headerMobileMenu__content__menu">
                     
-                    <img v-if="userType == 'admin'" src="@/assets/icons/profile.svg" @click="$store.state.openLoginModal = true" style="cursor: pointer;" class="profileIcon"/>
-                    <img v-else src="@/assets/icons/profileActive.svg" @click="$router.push('/profile/data')" style="cursor: pointer;" class="profileIcon"/>
+                    <img v-if="getType === false" src="@/assets/icons/profile.svg" @click="$store.state.openLoginModal = true" style="cursor: pointer; max-width: 24px;"/>
+                    <button v-else-if="getType === 'driver'" class="header__bot__right-button2" @click="$router.push('/admin/data')" style="cursor: pointer;">
+                        {{ getUser.fio }}
+                        <img src="@/assets/icons/profileActive.svg"/>
+                    </button>
+                    <button v-else-if="getType === 'user'" class="header__bot__right-button2" @click="$router.push('/profile/data')" style="cursor: pointer;">
+                        {{ getUser.fio }}
+                        <img src="@/assets/icons/profileActive.svg"/>
+                    </button>
                     <router-link to="#about" @click="isBurgerActive = false"><p>{{ $t('aboutUs') }}</p></router-link>
                     <div class="headerMobileMenu__content__menu-line"></div>
                     <router-link to="#faq" @click="isBurgerActive = false"><p>{{ $t('faq') }}</p></router-link>
@@ -85,6 +93,7 @@
                     <div class="headerMobileMenu__content__menu-line"></div>
                     
                     <button class="header__bot__right-button1" @click="$router.push('/order'), isBurgerActive = false">{{ $t('offerForm') }}</button>
+                    <button class="header__bot__right-button1" @click="$router.push('/moving')">Мувинговая услуга</button>
                     <!-- <button class="header__bot__right-button2" @click="isBurgerActive = false">{{ $t('offerCouries') }}</button> -->
                 </div>
             </div>
